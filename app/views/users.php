@@ -4,184 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0f1e17;
-            --panel: #14261d;
-            --panel-2: #17301f;
-            --accent: #22c55e;
-            --accent-dark: #16a34a;
-            --accent-light: #4ade80;
-            --text: #e7f3ec;
-            --text-muted: #93a89c;
-            --border: #234531;
-            --row-hover: #1c3a26;
+        :root{
+            --bg:#090d13;
+            --bg-panel:#0f141c;
+            --bg-tab-inactive:#0b0f16;
+            --border:#1c2430;
+            --text:#d7dee7;
+            --text-dim:#5b6472;
+            --blue:#5fb3ff;
+            --green:#8ddb94;
+            --orange:#f2b774;
+            --pink:#ff86b0;
+            --comment:#6b7688;
+            --radius:10px;
         }
 
-        * { box-sizing: border-box; }
+        *{ box-sizing:border-box; }
 
-        body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            min-height: 100vh;
-            background: radial-gradient(circle at top left, #17301f 0%, var(--bg) 55%);
-            color: var(--text);
+        html,body{
+            margin:0;
+            min-height:100vh;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(95,179,255,0.08), transparent 45%),
+                radial-gradient(circle at 90% 100%, rgba(255,134,176,0.06), transparent 50%),
+                var(--bg);
+            color:var(--text);
+            font-family:'JetBrains Mono', ui-monospace, Menlo, monospace;
+            padding:32px 16px;
         }
 
-        .container {
-            max-width: 950px;
-            margin: auto;
-            background: var(--panel);
-            padding: 28px 30px 34px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        .editor-window{
+            width:100%;
+            max-width:960px;
+            margin:0 auto;
+            background:var(--bg-panel);
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            overflow:hidden;
+            box-shadow:0 30px 80px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02) inset;
         }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 4px;
+        /* title bar */
+        .title-bar{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 14px;
+            background:var(--bg-tab-inactive);
+            border-bottom:1px solid var(--border);
+        }
+        .traffic-lights{ display:flex; gap:7px; }
+        .dot{ width:11px; height:11px; border-radius:50%; display:inline-block; }
+        .dot.red{ background:#ff5f57; }
+        .dot.yellow{ background:#febc2e; }
+        .dot.green{ background:#28c840; }
+        .title-bar-label{
+            margin:0 auto;
+            font-size:12px;
+            color:var(--text-dim);
+            letter-spacing:0.02em;
         }
 
-        h2 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* query header */
+        .query-pane{
+            padding:22px 26px 6px;
+        }
+        .terminal-header{
+            font-size:12px;
+            color:var(--text-dim);
+            margin-bottom:16px;
+        }
+        .terminal-header .prompt{ color:var(--green); }
+        .terminal-header .path{ color:var(--blue); margin:0 6px; }
+        .terminal-header .cmd{ color:var(--text); }
+
+        h2{
+            font-family:'Inter', sans-serif;
+            font-size:19px;
+            font-weight:600;
+            color:var(--text);
+            margin:0 0 4px;
+        }
+        .row-count{
+            font-size:12px;
+            color:var(--comment);
+            font-style:italic;
+            margin-bottom:18px;
+        }
+        .row-count .n{ color:var(--green); font-style:normal; }
+
+        /* table styled as query result */
+        .table-wrap{
+            padding:0 26px 26px;
+            overflow-x:auto;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:13px;
+            min-width:640px;
+        }
+        thead th{
+            text-align:left;
+            padding:10px 14px;
+            background:rgba(255,255,255,0.02);
+            color:var(--blue);
+            font-weight:500;
+            border-bottom:1px solid var(--border);
+            white-space:nowrap;
+        }
+        thead th::before{
+            content:"# ";
+            color:var(--comment);
+        }
+        tbody td{
+            padding:11px 14px;
+            border-bottom:1px solid var(--border);
+            color:var(--text);
+        }
+        tbody td:first-child{ color:var(--orange); }
+        tbody tr:hover td{ background:rgba(95,179,255,0.05); }
+        tbody tr:last-child td{ border-bottom:none; }
+
+        .empty{
+            text-align:center;
+            padding:34px 20px !important;
+            color:var(--comment) !important;
+            font-style:italic;
+        }
+        .empty::before{
+            content:"// ";
         }
 
-        h2::before {
-            content: "";
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--accent-light);
-            box-shadow: 0 0 10px var(--accent-light);
+        /* status bar */
+        .status-bar{
+            display:flex;
+            gap:18px;
+            align-items:center;
+            padding:8px 16px;
+            background:#153252;
+            color:#a9d2ff;
+            font-size:11px;
+            letter-spacing:0.02em;
         }
+        .status-bar span:first-child{ color:var(--green); }
+        .status-right{ margin-left:auto; }
 
-        .subtitle {
-            margin: 4px 0 18px;
-            color: var(--text-muted);
-            font-size: 13.5px;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-            color: #08150d;
-            font-weight: 700;
-            font-size: 12.5px;
-            padding: 6px 14px;
-            border-radius: 999px;
-            white-space: nowrap;
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px;
-            background: var(--panel-2);
-        }
-
-        thead tr {
-            background: linear-gradient(135deg, var(--accent-dark), #0d7a3c);
-        }
-
-        th {
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #eafff1;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 13px 16px;
-            font-size: 14.5px;
-            color: var(--text);
-            border-bottom: 1px solid var(--border);
-        }
-
-        tbody tr {
-            transition: background 0.15s ease;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr:hover {
-            background: var(--row-hover);
-        }
-
-        tbody tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        tbody tr:nth-child(even):hover {
-            background: var(--row-hover);
-        }
-
-        td:first-child {
-            color: var(--accent-light);
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 40px 20px;
-            font-size: 14.5px;
-        }
-
-        .empty::before {
-            content: "🌿";
-            display: block;
-            font-size: 26px;
-            margin-bottom: 8px;
-            filter: grayscale(1) brightness(1.6);
-        }
-
-        @media (max-width: 600px) {
-            .container { padding: 20px; }
-            th, td { padding: 10px 12px; font-size: 13px; }
+        @media (max-width:560px){
+            .query-pane{ padding:18px 16px 4px; }
+            .table-wrap{ padding:0 16px 20px; }
+            .status-bar{ gap:12px; font-size:10px; }
+            .title-bar-label{ display:none; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h2>Registered Users</h2>
-        <span class="badge"><?= isset($users) ? count($users) : 0 ?> Total</span>
+<div class="editor-window">
+
+    <div class="title-bar">
+        <div class="traffic-lights">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="title-bar-label">admin — users.php</div>
     </div>
-    <p class="subtitle">List ng lahat ng users na naka-register sa system.</p>
+
+    <div class="query-pane">
+        <div class="terminal-header">
+            <span class="prompt">admin@campus</span><span class="path">~/database</span>$ <span class="cmd">SELECT * FROM users;</span>
+        </div>
+        <h2>Registered Users</h2>
+        <p class="row-count">// <span class="n"><?= isset($users) ? count($users) : 0; ?></span> record<?= (isset($users) && count($users) === 1) ? '' : 's'; ?> returned</p>
+    </div>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Username</th>
+                    <th>id</th>
+                    <th>firstname</th>
+                    <th>lastname</th>
+                    <th>email</th>
+                    <th>username</th>
                 </tr>
             </thead>
             <tbody>
@@ -203,6 +211,15 @@
             </tbody>
         </table>
     </div>
+
+    <div class="status-bar">
+        <span>● online</span>
+        <span>UTF-8</span>
+        <span>PHP</span>
+        <span>MySQL</span>
+        <span class="status-right">Ln 1, Col 1</span>
+    </div>
+
 </div>
 
 </body>
