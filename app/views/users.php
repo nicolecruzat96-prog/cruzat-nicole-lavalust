@@ -12,6 +12,7 @@
             --bg:#090d13;
             --bg-panel:#0f141c;
             --bg-tab-inactive:#0b0f16;
+            --bg-tab-active:#141b26;
             --border:#1c2430;
             --text:#d7dee7;
             --text-dim:#5b6472;
@@ -36,6 +37,8 @@
             font-family:'JetBrains Mono', ui-monospace, Menlo, monospace;
             padding:32px 16px;
         }
+
+        a{ color:inherit; text-decoration:none; }
 
         .editor-window{
             width:100%;
@@ -68,6 +71,33 @@
             color:var(--text-dim);
             letter-spacing:0.02em;
         }
+
+        /* tabs = navigation */
+        .tab-strip{
+            display:flex;
+            background:var(--bg-tab-inactive);
+            border-bottom:1px solid var(--border);
+        }
+        .tab{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:11px 18px;
+            font-size:13px;
+            color:var(--text-dim);
+            background:var(--bg-tab-inactive);
+            border-right:1px solid var(--border);
+            transition:background .15s ease, color .15s ease;
+        }
+        .tab:hover{ color:var(--text); background:#101620; }
+        .tab:focus-visible{ outline:2px solid var(--blue); outline-offset:-2px; }
+        .tab.active{
+            background:var(--bg-tab-active);
+            color:var(--text);
+            box-shadow:inset 0 -2px 0 var(--blue);
+        }
+        .tab-icon{ font-size:10px; color:var(--blue); }
+        .tab.active .tab-icon{ color:var(--green); }
 
         /* query header */
         .query-pane{
@@ -170,15 +200,27 @@
         <div class="traffic-lights">
             <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
         </div>
-        <div class="title-bar-label">admin — users.php</div>
+        <div class="title-bar-label">Lavalust</div>
     </div>
+
+    <nav class="tab-strip">
+        <a href="<?=site_url('student');?>" class="tab">
+            <span class="tab-icon">○</span> home.php
+        </a>
+        <a href="<?=site_url('student/profile');?>" class="tab">
+            <span class="tab-icon">○</span> profile.php
+        </a>
+        <a href="<?=site_url('users');?>" class="tab active">
+            <span class="tab-icon">●</span> users
+        </a>
+    </nav>
 
     <div class="query-pane">
         <div class="terminal-header">
-            <span class="prompt">admin@campus</span><span class="path">~/database</span>$ <span class="cmd">SELECT * FROM users;</span>
+            <span class="prompt">Database Records</span>
         </div>
         <h2>Registered Users</h2>
-        <p class="row-count">// <span class="n"><?= isset($users) ? count($users) : 0; ?></span> record<?= (isset($users) && count($users) === 1) ? '' : 's'; ?> returned</p>
+        <p class="row-count"> Overview of everyone currently registered in the system — <span class="n"><?= isset($users) ? count($users) : 0; ?></span> user<?= (isset($users) && count($users) === 1) ? '' : 's'; ?> on file.</p>
     </div>
 
     <div class="table-wrap">
