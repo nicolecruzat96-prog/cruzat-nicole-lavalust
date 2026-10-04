@@ -6,6 +6,7 @@ class AuthController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->call->model('UserModel');
     }
 
     public function login()
@@ -14,20 +15,27 @@ class AuthController extends Controller
 
         if ($this->form_validation->submitted()) {
             $email = trim($this->io->post('email'));
+            $password = $this->io->post('password');
             $role = $this->io->post('role');
+            $user = $this->UserModel->find_by_email($email);
 
-            if (in_array($role, ['user', 'admin'], true)) {
+            $passwordMatches = $user && (
+                $user['password'] === $password ||
+                password_verify($password, $user['password'])
+            );
+
+            if ($user && $passwordMatches && $user['role'] === $role) {
                 $this->session->regenerate_on_login();
                 $this->session->set_userdata([
-                    'user_id' => 1,
-                    'user_email' => $email,
-                    'user_role' => $role
+                    'user_id' => $user['id'],
+                    'user_email' => $user['email'],
+                    'user_role' => $user['role']
                 ]);
                 header('Location: ' . site_url('/products'));
                 exit;
             }
 
-            $data['error'] = 'Please select a valid role.';
+            $data['error'] = 'Invalid email, password, or role.';
         }
 
         $this->call->view('auth/login', $data);

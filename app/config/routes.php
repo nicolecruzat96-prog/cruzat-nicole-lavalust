@@ -65,3 +65,17 @@ $router->get('/student', 'StudentController::index', ['middleware' => 'StudentMi
 $router->get('/students', 'StudentController::index', ['middleware' => 'StudentMiddleware'] );
 $router->get('/student/profile', 'StudentController::profile', ['middleware' => 'StudentMiddleware'] );
 $router->get('/users', 'UserController::showUsers' );
+
+// Migration Routes
+$router->get('create-migration/{migration_class}', 'MigrationController::create_migration');
+$router->get('migrate', 'MigrationController::migrate');
+$router->get('rollback', 'MigrationController::rollback');
+$router->get('rollback-all', 'MigrationController::rollback_all');
+$router->get('refresh', 'MigrationController::refresh');
+$router->get('status', 'MigrationController::status');
+
+// Product API routes use `any` so the API library can answer CORS preflight requests.
+$router->any('/api/auth/login', 'ApiController::login');
+$router->any('/api/auth/logout', 'ApiController::logout');
+$router->any('/api/products', 'ApiController::products');
+$router->any('/api/products/{id}', 'ApiController::product');

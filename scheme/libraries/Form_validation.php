@@ -487,7 +487,7 @@ class Form_validation {
      */
     public function alpha($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(! ctype_alpha($this->value))
             {
@@ -505,7 +505,7 @@ class Form_validation {
      */
     public function alpha_numeric($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(! ctype_alnum((string) $this->value))
             {
@@ -523,7 +523,7 @@ class Form_validation {
      */
     public function alpha_numeric_space($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(! preg_match('/^[A-Z0-9 ]+$/i', $this->value))
             {
@@ -541,7 +541,7 @@ class Form_validation {
      */
     public function alpha_space($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(! preg_match('/^[A-Z ]+$/i', $this->value))
             {
@@ -559,7 +559,7 @@ class Form_validation {
      */
     public function alpha_numeric_dash($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(!preg_match('/^[a-z0-9_-]+$/i', $this->value))
             {
@@ -577,7 +577,7 @@ class Form_validation {
     */
     public function numeric($custom_error = '')
     {
-        if(($this->value != '' || $this->value != null))
+        if(($this->value != '' && $this->value != null))
         {
             if(! preg_match('/^[\-+]?[0-9]*\.?[0-9]+$/', $this->value))
             {

@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+frontend/node_modules
+frontend/dist
+runtime/cache
+runtime/logs
+runtime/session
+*.pem
+*.crt
